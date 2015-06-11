@@ -26,7 +26,7 @@ The first steps are to attach the connectors...
 2. ATTACH CLUSTER cassandra_prod ON DATASTORE Cassandra WITH OPTIONS {'Hosts': '[127.0.0.1]', 'Port': 9042, 'rpcPort':9160, 'cluster':'cassandra_prod'};
 3. ADD CONNECTOR /etc/sds/connectors/cassandra/CassandraConnector.xml;
 4. ADD CONNECTOR /etc/sds/connectors/sparksql/SparkSQLConnector.xml;
-5. ATTACH CONNECTOR CassandraConnector TO cassandra_prod WITH OPTIONS {'DefaultLimit': '1000'};
+5. ATTACH CONNECTOR CassandraConnector TO cassandra_prod WITH OPTIONS {'DefaultLimit': '1000'} AND PRIORITY=1;
 6. ATTACH CONNECTOR SparkSQLConnector TO cassandra_prod WITH OPTIONS {'DefaultLimit': '1000'};
 
 Now we can operate as usual...
@@ -49,29 +49,34 @@ You can insert a few rows by executing:
 15. INSERT INTO test.table2(id, lastname, age, company) VALUES (1000, 'Fernandez', 35, 'Stratio');
 16. INSERT INTO test.table2(id, lastname, age, company) VALUES (1001, 'Yorke', 42, 'Big Data Company');
 
-You can also insert 900 rows in every table by typing the next command in a system shell:
 
-17. exit
+17. USE test;
+18. SELECT * FROM test.table1;
+19. SELECT count(*) FROM table1;
+20. SELECT now() FROM table1;
+21. SELECT id, age FROM table2;
 
-> cd /etc/sds/crossdata/
-> java -jar CrossdataClientExample.jar
+22. SELECT name, age FROM table1 INNER JOIN table2 ON table1.id=table2.id;
 
-Now, we can come back to the crossdata shell and see some results:
+You can execute a insert from select statement
 
-> cd /opt/sds/crossdata/bin
-> ./crossdata-sh
-
-18. USE test;
-19. SELECT * FROM test.table1;
-20. SELECT count(*) FROM table1;
-21. SELECT now() FROM table1;
-22. SELECT id, age FROM table2;
-
-23. SELECT name, age FROM table1 INNER JOIN table2 ON table1.id=table2.id;
+23. CREATE TABLE table3 ON CLUSTER cassandra_prod (id int PRIMARY KEY, company text);
+24. INSERT INTO test.table3(id,company) select table2.id, table2.company from test.table2;
+25. SELECT * FROM table3;
 
 Let's create a full text index:
 
-24. CREATE FULL_TEXT INDEX myIndex ON table1(email);
+26. CREATE FULL_TEXT INDEX myIndex ON table1(email);
 
-25. SELECT * FROM table1 WHERE email MATCH '*yahoo*';
+Now we can execute a search query:
+27. SELECT * FROM table1 WHERE email MATCH '*yahoo*';
 
+Or you can execute an OR search query:
+28. SELECT * FROM table1 where email=should('*yahoo*','*crossdata*');
+
+
+For more information about grammar, please visit our github site:
+https://github.com/Stratio/crossdata/tree/0.3.3-RELEASE
+
+If you find any kind of bug or issue please report to:
+https://crossdata.atlassian.net
