@@ -23,7 +23,7 @@ Now you can play with the shell with this example of crossdata use:
 
 The first steps are to attach the connectors...::
 
-    ATTACH CLUSTER cassandra_prod ON DATASTORE Cassandra WITH OPTIONS {'Hosts': '[127.0.0.1]', 'Port': 9042, 'rpcPort':9160, 'cluster':'cassandra_prod'};
+   ATTACH CLUSTER cassandra_prod ON DATASTORE Cassandra WITH OPTIONS {'Hosts': '[127.0.0.1]', 'Port': 9042, 'rpcPort':9160, 'cluster':'cassandra_prod'};
    ATTACH CONNECTOR CassandraConnector TO cassandra_prod WITH OPTIONS {'DefaultLimit': '1000'} AND PRIORITY=1;
    ATTACH CONNECTOR SparkSQLConnector TO cassandra_prod WITH OPTIONS {'DefaultLimit': '1000'};
 
@@ -37,8 +37,8 @@ Now we can operate as usual...::
 You can insert a few rows by executing::
 
     INSERT INTO catalogTest.tableTest(id, serial, name, rating, email) VALUES (999, 54000, 'Peter', 8.9,'myemail@yahoo.com');
-   INSERT INTO catalogTest.tableTest(id, serial, name, rating, email) VALUES (1000, 71098, 'Charles', 2.7,'contact@stratio.com');
-   INSERT INTO catalogTest.tableTest(id, serial, name, rating, email) VALUES (1001, 34539, 'John', 9.3,'crossdata@stratio.com');
+    INSERT INTO catalogTest.tableTest(id, serial, name, rating, email) VALUES (1000, 71098, 'Charles', 2.7,'contact@stratio.com');
+    INSERT INTO catalogTest.tableTest(id, serial, name, rating, email) VALUES (1001, 34539, 'John', 9.3,'crossdata@stratio.com');
 
     INSERT INTO catalogTest.tableTest2(id, lastname, age, company) VALUES (999, 'Miller', 23, 'Best Company');
     INSERT INTO catalogTest.tableTest2(id, lastname, age, company) VALUES (1000, 'Fernandez', 35, 'Stratio');
@@ -49,11 +49,11 @@ Now, we can come back to the crossdata shell and see some results::
     > cd /opt/sds/crossdata/bin
     > ./crossdata-sh
 
-   USE catalogTest;
-   SELECT * FROM catalogTest.tableTest;
-   SELECT id, age FROM catalogTest.tableTest2;
+    USE catalogTest;
+    SELECT * FROM catalogTest.tableTest;
+    SELECT id, age FROM catalogTest.tableTest2;
 
-   SELECT name, age FROM catalogtest.tabletest INNER JOIN catalogtest.tabletest2 ON tabletest.id=tabletest2.id;
+    SELECT name, age FROM catalogtest.tabletest INNER JOIN catalogtest.tabletest2 ON tabletest.id=tabletest2.id;
 
 Let's create a full text index::
 
